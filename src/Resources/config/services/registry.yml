@@ -2,5 +2,7 @@ services:
     Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry:
         public: false
         arguments:
-            $defaultManager: ~
+            # The default encryption manager code will be replaced in
+            # \Sidus\EncryptionBundle\DependencyInjection\SidusEncryptionExtension
+            $defaultCode: ~
             $managers: !tagged {tag: sidus.encryption.manager, default_index_method: getCode}
