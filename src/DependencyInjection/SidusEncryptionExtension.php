@@ -29,7 +29,6 @@ class SidusEncryptionExtension extends Extension
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
         $loader->load('encryption.yml');
-        $loader->load('event.yml');
         $loader->load('registry.yml');
         $loader->load('security.yml');
         $loader->load('session.yml');
@@ -39,6 +38,6 @@ class SidusEncryptionExtension extends Extension
 
         $registry = $container->getDefinition(EncryptionManagerRegistry::class);
         $registry->replaceArgument('$defaultCode', $config['preferred_adapter']);
-        $container->setParameter('sidus.encryption.throw_exceptions', $config['throw_exceptions']);
+        $container->setParameter('sidus.encryption.throw_exceptions', $config['throw_exception']);
     }
 }
