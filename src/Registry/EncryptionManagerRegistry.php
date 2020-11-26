@@ -13,18 +13,21 @@ use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
  */
 class EncryptionManagerRegistry
 {
-    private array $managers;
+    private array $managers = [];
     private string $defaultCode;
     
     /**
      * EncryptionManagerRegistry constructor.
      *
      * @param string   $defaultCode
-     * @param iterable|\Traversable $managers
+     * @param iterable|\Traversable|EncryptionManagerInterface[] $managers
      */
     public function __construct(string $defaultCode, iterable $managers)
     {
-        $this->managers = iterator_to_array($managers);
+        /** @var EncryptionManagerInterface $manager */
+        foreach (iterator_to_array($managers) as $manager) {
+            $this->managers[$manager->getEncryptionAdapter()->getCode()] = $manager;
+        }
         $this->defaultCode = $defaultCode;
     }
 
