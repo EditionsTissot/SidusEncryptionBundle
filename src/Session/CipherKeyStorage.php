@@ -61,7 +61,7 @@ class CipherKeyStorage implements CipherKeyStorageInterface
      */
     public function getCipherKey(): string
     {
-        if (!$this->cipherKey) {
+        if (!isset($this->cipherKey) || !$this->cipherKey) {
             $this->cipherKey = hex2bin($this->session->get(self::SESSION_CIPHER_KEY));
         }
         if (!trim($this->cipherKey)) {
