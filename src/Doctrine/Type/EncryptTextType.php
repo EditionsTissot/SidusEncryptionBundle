@@ -3,10 +3,10 @@
 namespace Sidus\EncryptionBundle\Doctrine\Type;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\TextType;
 use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
 
-class EncryptType extends StringType implements EncryptTypeInterface
+class EncryptTextType extends TextType implements EncryptTypeInterface
 {
     private EncryptionManagerInterface $encryptionManager;
 
@@ -31,6 +31,6 @@ class EncryptType extends StringType implements EncryptTypeInterface
 
     public function getName()
     {
-        return 'encrypt_string';
+        return 'encrypt_text';
     }
 }
