@@ -5,10 +5,11 @@ namespace Sidus\EncryptionBundle\Tests\PHPUnit\Doctrine\Type;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Sidus\EncryptionBundle\Doctrine\Type\EncryptType;
+use Sidus\EncryptionBundle\Doctrine\Type\EncryptStringType;
+use Sidus\EncryptionBundle\Doctrine\Type\EncryptTextType;
 use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
 
-class EncryptTypeTest extends TestCase
+class EncryptTextTypeTest extends TestCase
 {
     public function testConvertToPHPValue(): void
     {
@@ -47,12 +48,12 @@ class EncryptTypeTest extends TestCase
     }
     
     /**
-     * @return EncryptType[]|MockObject[]
+     * @return EncryptStringType[]|MockObject[]
      */
     private function createType(): array
     {
         $encryptionManager = $this->createMock(EncryptionManagerInterface::class);
-        $type = new EncryptType();
+        $type = new EncryptTextType();
         $type->setEncryptionManager($encryptionManager);
     
         return [$type, $encryptionManager];
