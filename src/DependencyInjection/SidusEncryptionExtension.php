@@ -31,15 +31,15 @@ class SidusEncryptionExtension extends Extension implements PrependExtensionInte
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/services'));
-        $loader->load('encryption.yml');
-        $loader->load('doctrine.yml');
-        $loader->load('registry.yml');
-        $loader->load('security.yml');
-        $loader->load('session.yml');
-
+        $loader->load('encryption.yaml');
+        $loader->load('doctrine.yaml');
+        $loader->load('registry.yaml');
+        $loader->load('security.yaml');
+        $loader->load('session.yaml');
+        
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-
+        
         $registry = $container->getDefinition(EncryptionManagerRegistry::class);
         $registry->replaceArgument('$defaultCode', $config['preferred_adapter']);
         $container->setParameter('sidus.encryption.throw_exceptions', $config['throw_exception']);
@@ -47,12 +47,12 @@ class SidusEncryptionExtension extends Extension implements PrependExtensionInte
     
     public function prepend(ContainerBuilder $container)
     {
-        $doctrineConfiguration = $container->getExtensionConfig('doctrine');
-    
+        $doctrineConfiguration = $container->getExtensionConfig('doctrine')[0];
+        
         if (empty($doctrineConfiguration['dbal'])) {
             $doctrineConfiguration['dbal'] = [];
         }
-    
+        
         if (empty($doctrineConfiguration['dbal']['types'])) {
             $doctrineConfiguration['dbal']['types'] = [];
         }
