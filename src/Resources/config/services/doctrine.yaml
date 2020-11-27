@@ -1,0 +1,9 @@
+services:
+    doctrine.dbal.connection_factory:
+        class: Sidus\EncryptionBundle\Doctrine\Connection\Factory\ConnectionFactory
+        alias: Sidus\EncryptionBundle\Doctrine\Connection\Factory\ConnectionFactory
+        autowire: true
+        autoconfigure: true
+        arguments:
+            $typesConfig: "%doctrine.dbal.connection_factory.types%"
+            $encryptionManager: '@Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry'
