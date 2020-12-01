@@ -120,11 +120,15 @@ class EncryptionManager implements EncryptionManagerInterface
      */
     public function decryptString(string $encryptedString, string $nonce = null): string
     {
-        if ($nonce === null) {
-            $nonce = $this->encryptionAdapter->parseNonce($encryptedString);
+        // Do not try to decrypt blank string
+        if ($encryptedString === '') {
+            return '';
         }
     
         try {
+            if ($nonce === null) {
+                $nonce = $this->encryptionAdapter->parseNonce($encryptedString);
+            }
             $decrypted = $this->encryptionAdapter->decrypt(
                 $encryptedString,
                 $nonce,
@@ -134,10 +138,10 @@ class EncryptionManager implements EncryptionManagerInterface
             if ($this->throwExceptions) {
                 throw $exception;
             }
-    
+        
             return '';
         }
-
+    
         return rtrim($decrypted, "\0");
     }
 

@@ -37,6 +37,7 @@ class Aes256GcmSodiumEncryptionAdapterTest extends TestCase
             [bin2hex(random_bytes(400))],
             [bin2hex(random_bytes(1000))],
             [bin2hex(random_bytes(10000))],
+            [''],
         ];
     }
     
