@@ -69,7 +69,7 @@ abstract class AbstractEncryptionAdapter implements EncryptionAdapterInterface
     public function parseNonce(string &$message): string
     {
         if (mb_strlen($message, static::ENCODING) < $this->getNonceSize()) {
-            throw new BadNonceException('Unable to parse nounce from message');
+            throw new BadNonceException('Unable to parse nounce from message "'.$message.'"');
         }
         $nonce = mb_substr($message, 0, $this->getNonceSize(), static::ENCODING);
         $message = mb_substr($message, $this->getNonceSize(), null, static::ENCODING);
