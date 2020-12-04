@@ -11,6 +11,7 @@ use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Sidus\EncryptionBundle\Doctrine\Type\EncryptTypeInterface;
+use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface;
 use Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry;
 
 /**
@@ -22,13 +23,18 @@ class ConnectionFactory
     private bool $initialized = false;
 
     private EncryptionManagerRegistry $encryptionManager;
-
-    public function __construct(array $typesConfig, EncryptionManagerRegistry $encryptionManager)
-    {
+    private EncryptionEnablerInterface $encryptionEnabler;
+    
+    public function __construct(
+        array $typesConfig,
+        EncryptionManagerRegistry $encryptionManager,
+        EncryptionEnablerInterface $encryptionEnabler
+    ) {
         $this->typesConfig = $typesConfig;
         $this->encryptionManager = $encryptionManager;
+        $this->encryptionEnabler = $encryptionEnabler;
     }
-
+    
     /**
      * Create a connection by name.
      *
@@ -36,6 +42,8 @@ class ConnectionFactory
      * @param string[]|Type[] $mappingTypes
      *
      * @return Connection
+     *
+     * @throws \Doctrine\DBAL\Exception
      */
     public function createConnection(array $params, Configuration $config = null, EventManager $eventManager = null, array $mappingTypes = []): Connection
     {
@@ -129,6 +137,7 @@ class ConnectionFactory
 
             if ($type instanceof EncryptTypeInterface) {
                 $type->setEncryptionManager($this->encryptionManager->getDefaultEncryptionManager());
+                $type->setEncryptionEnabler($this->encryptionEnabler);
             }
         }
         $this->initialized = true;

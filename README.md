@@ -61,15 +61,34 @@ key which can prove to be tricky, especially if users already have accounts and 
 
 If each user encrypts it's own data however, you can just use the automatic encryption key generation in your
 config.yml:
-```
+```yaml
 sidus_encryption:
     encryption_key:
         auto_generate: false
+        throw_exceptions: true # Do not throw an exception when an error occurred when decrypting a value
 ```
 This will tell the system to automatically generate a new encryption key if the user doesn't have any.
 
 In case of password recovery, the user won't be able to retrieve any of the encrypted data because he would be the only
 one able to decrypt the cipher key.
+
+Disable Encryption
+------------------
+The encryption can be temporary disabled on an encrypted type (in a command for example). This can be achieved using 
+the `Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface` service:
+```php
+
+// ...
+$encryptionEnabler->disableEncryption();
+
+// Starting from here, data will not be decrypted
+$encryptionManager->decryptString($value); // The value will not be decrypted
+$encryptionManager->encryptString($value); // The value will not be encrypted and store as is
+
+$encryptionEnabler->enableEncryption();
+// Now the encryption is re-enabled and works normally
+
+``` 
 
 Apache License
 --------------
