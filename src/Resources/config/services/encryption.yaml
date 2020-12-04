@@ -10,13 +10,15 @@ services:
         public: false
         tags:
             - { name: sidus.encryption.adapter }
-
+    
     Sidus\EncryptionBundle\Encryption\Rijndael256MCryptEncryptionAdapter:
         class: Sidus\EncryptionBundle\Encryption\Rijndael256MCryptEncryptionAdapter
         public: false
         tags:
             - { name: sidus.encryption.adapter }
 
+    Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface: '@Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler'
+    
     Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler:
         class: Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler
         public: false
