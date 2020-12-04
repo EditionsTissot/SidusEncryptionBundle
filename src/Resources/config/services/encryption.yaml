@@ -16,3 +16,7 @@ services:
         public: false
         tags:
             - { name: sidus.encryption.adapter }
+
+    Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler:
+        class: Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler
+        public: false
