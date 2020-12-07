@@ -6,3 +6,5 @@ services:
             # \Sidus\EncryptionBundle\DependencyInjection\SidusEncryptionExtension
             $defaultCode: ~
             $managers: !tagged {tag: sidus.encryption.manager, default_index_method: getCode}
+    
+    Sidus\EncryptionBundle\Registry\EncryptionManagerRegistryInterface: '@Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry'

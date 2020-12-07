@@ -2,10 +2,10 @@
 
 namespace Sidus\EncryptionBundle\Doctrine\Type;
 
-use Doctrine\DBAL\Types\StringType;
+use Doctrine\DBAL\Types\TextType;
 use Sidus\EncryptionBundle\Doctrine\Type\Behavior\EncryptType;
 
-class EncryptStringType extends StringType implements EncryptTypeInterface
+class EncryptStringType extends TextType implements EncryptTypeInterface
 {
     use EncryptType;
 

@@ -11,8 +11,7 @@ use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Sidus\EncryptionBundle\Doctrine\Type\EncryptTypeInterface;
-use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface;
-use Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry;
+use Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface;
 
 /**
  * The default Doctrine's connection factory should be override to allow injection the encryption manager into the type.
@@ -21,18 +20,14 @@ class ConnectionFactory
 {
     private array $typesConfig;
     private bool $initialized = false;
-
-    private EncryptionManagerRegistry $encryptionManager;
-    private EncryptionEnablerInterface $encryptionEnabler;
+    private ValueEncrypterInterface $valueEncrypter;
     
     public function __construct(
         array $typesConfig,
-        EncryptionManagerRegistry $encryptionManager,
-        EncryptionEnablerInterface $encryptionEnabler
+        ValueEncrypterInterface $valueEncrypter
     ) {
         $this->typesConfig = $typesConfig;
-        $this->encryptionManager = $encryptionManager;
-        $this->encryptionEnabler = $encryptionEnabler;
+        $this->valueEncrypter = $valueEncrypter;
     }
     
     /**
@@ -136,8 +131,7 @@ class ConnectionFactory
             $type = Type::getType($typeName);
 
             if ($type instanceof EncryptTypeInterface) {
-                $type->setEncryptionManager($this->encryptionManager->getDefaultEncryptionManager());
-                $type->setEncryptionEnabler($this->encryptionEnabler);
+                $type->setValueEncrypter($this->valueEncrypter);
             }
         }
         $this->initialized = true;

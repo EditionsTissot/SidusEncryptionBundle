@@ -3,125 +3,66 @@
 namespace Sidus\EncryptionBundle\Tests\PHPUnit\Doctrine\Type;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
-use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
+use Doctrine\DBAL\Types\Type;
+use Monolog\Logger;
 use Sidus\EncryptionBundle\Doctrine\Type\EncryptStringType;
-use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface;
-use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
+use Sidus\EncryptionBundle\Doctrine\ValueEncrypter;
+use Sidus\EncryptionBundle\Encryption\Aes256GcmSodiumEncryptionAdapter;
+use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler;
+use Sidus\EncryptionBundle\Encryption\EncryptionAdapterInterface;
+use Sidus\EncryptionBundle\Encryption\Rijndael256MCryptEncryptionAdapter;
+use Sidus\EncryptionBundle\Encryption\XChaChaPolySodiumEncryptionAdapter;
+use Sidus\EncryptionBundle\Manager\EncryptionManager;
+use Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry;
+use Sidus\EncryptionBundle\Session\CipherKeyStorage;
+use Sidus\EncryptionBundle\Tests\PHPUnit\TestCase;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 class EncryptStringTypeTest extends TestCase
 {
-    public function testConvertToPHPValue(): void
+    private Type $type;
+    
+    /**
+     * @dataProvider encryptDataProvider
+     */
+    public function testConvertToPHPValue(string $value): void
     {
-        [$type, $encryptionManager, $encryptionEnabler] = $this->createType();
-        $encryptedString = '\X666';
-        $platform = $this->createMock(MySqlPlatform::class);
-    
-        $encryptionEnabler
-            ->expects($this->once())
-            ->method('isEncryptionEnabled')
-            ->willReturn(true)
-        ;
-    
-        // The type SHOULD decrypt the encrypted string
-        $encryptionManager
-            ->expects($this->once())
-            ->method('decryptString')
-            ->with(base64_decode($encryptedString))
-            ->willReturn('my_decrypted_string')
-        ;
+        $encryptedValue = $this->type->convertToDatabaseValue($value, new MySqlPlatform());
+        $decryptedValue = $this->type->convertToPHPValue($encryptedValue, new MySqlPlatform());
         
-        $value = $type->convertToPHPValue($encryptedString, $platform);
-        $this->assertEquals('my_decrypted_string', $value);
-    }
-    
-    public function testConvertToPHPValueWithEncryptionDisabled(): void
-    {
-        [$type, $encryptionManager, $encryptionEnabler] = $this->createType();
-        $encryptedString = '\X666';
-        $platform = $this->createMock(MySqlPlatform::class);
-        
-        $encryptionEnabler
-            ->expects($this->once())
-            ->method('isEncryptionEnabled')
-            ->willReturn(false)
-        ;
-    
-        // The type SHOULD not encrypt the encrypted string if the encryption is disabled
-        $encryptionManager
-            ->expects($this->never())
-            ->method('decryptString')
-        ;
-        
-        $value = $type->convertToPHPValue($encryptedString, $platform);
-        $this->assertEquals('\X666', $value);
-    }
-    
-    public function testConvertToDatabaseValue(): void
-    {
-        [$type, $encryptionManager, $encryptionEnabler] = $this->createType();
-        $string = 'my_string';
-        $platform = $this->createMock(MySqlPlatform::class);
-    
-        $encryptionEnabler
-            ->expects($this->once())
-            ->method('isEncryptionEnabled')
-            ->willReturn(true)
-        ;
-    
-        // The type SHOULD decrypt the encrypted string
-        $encryptionManager
-            ->expects($this->once())
-            ->method('encryptString')
-            ->with($string)
-            ->willReturn('my_encrypted_string')
-        ;
-    
-        $value = $type->convertToDatabaseValue($string, $platform);
-        $this->assertEquals(base64_encode('my_encrypted_string'), $value);
-    }
-    
-    public function testConvertToDatabaseValueWithEncryptionDisabled(): void
-    {
-        [$type, $encryptionManager, $encryptionEnabler] = $this->createType();
-        $string = 'my_string';
-        $platform = $this->createMock(MySqlPlatform::class);
-        
-        $encryptionEnabler
-            ->expects($this->once())
-            ->method('isEncryptionEnabled')
-            ->willReturn(false)
-        ;
-        
-        // The type SHOULD not decrypt the encrypted string if the encryption is disabled
-        $encryptionManager
-            ->expects($this->never())
-            ->method('encryptString')
-        ;
-        
-        $value = $type->convertToDatabaseValue($string, $platform);
-        $this->assertEquals('my_string', $value);
+        $this->assertEquals($value, $decryptedValue);
     }
     
     public function testGetName(): void
     {
-        [$type] = $this->createType();
-        
-        $this->assertEquals('encrypt_string', $type->getName());
+        $this->assertEquals('encrypt_string', $this->type->getName());
     }
     
-    /**
-     * @return EncryptStringType[]|MockObject[]
-     */
-    private function createType(): array
+    protected function setUp(): void
     {
-        $encryptionManager = $this->createMock(EncryptionManagerInterface::class);
-        $encryptionEnabler = $this->createMock(EncryptionEnablerInterface::class);
+        $enabler = new EncryptionEnabler();
+        $session = new Session(new MockFileSessionStorage());
+        $storage = new CipherKeyStorage($session);
         
-        $type = new EncryptStringType();
-        $type->setEncryptionManager($encryptionManager);
-        $type->setEncryptionEnabler($encryptionEnabler);
-    
-        return [$type, $encryptionManager, $encryptionEnabler];
+        $managers = [];
+        $adapters = [
+            new Aes256GcmSodiumEncryptionAdapter(),
+            new Rijndael256MCryptEncryptionAdapter(),
+            new XChaChaPolySodiumEncryptionAdapter(),
+        ];
+        
+        /** @var EncryptionAdapterInterface $adapter */
+        foreach ($adapters as $adapter) {
+            $storage->setCipherKey($adapter->generateKey());
+            $managers[] = new EncryptionManager($adapter, $storage);
+        }
+        
+        $registry = new EncryptionManagerRegistry(
+            XChaChaPolySodiumEncryptionAdapter::getCode(), new \ArrayIterator($managers)
+        );
+        $encrypter = new ValueEncrypter($registry, new Logger('encryption'), $enabler);
+        $this->type = new EncryptStringType();
+        $this->type->setValueEncrypter($encrypter);
     }
 }

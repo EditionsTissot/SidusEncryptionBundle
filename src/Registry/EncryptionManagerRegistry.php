@@ -11,7 +11,7 @@ use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
  */
-class EncryptionManagerRegistry
+class EncryptionManagerRegistry implements EncryptionManagerRegistryInterface
 {
     private array $managers = [];
     private string $defaultCode;

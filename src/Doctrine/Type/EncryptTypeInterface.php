@@ -2,12 +2,9 @@
 
 namespace Sidus\EncryptionBundle\Doctrine\Type;
 
-use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface;
-use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
+use Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface;
 
 interface EncryptTypeInterface
 {
-    public function setEncryptionManager(EncryptionManagerInterface $encryptionManager): void;
-    
-    public function setEncryptionEnabler(EncryptionEnablerInterface $encryptionEnabler): void;
+    public function setValueEncrypter(ValueEncrypterInterface $valueEncrypter): void;
 }

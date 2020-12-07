@@ -5,4 +5,4 @@ services:
         autoconfigure: true
         arguments:
             $typesConfig: "%doctrine.dbal.connection_factory.types%"
-            $encryptionManager: '@Sidus\EncryptionBundle\Registry\EncryptionManagerRegistry'
+            $valueEncrypter: '@Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface'

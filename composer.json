@@ -25,11 +25,14 @@
         "symfony/framework-bundle": "^4.4|^5.1",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
-        "symfony/security":"^4.4|^5.1"
+        "symfony/security":"^4.4|^5.1",
+        "symfony/monolog-bundle": "^3.6",
+        "symfony/string": "^5.2"
     },
     "require-dev": {
         "symfony/stopwatch": "^4.4|^5.1",
-        "phpunit/phpunit": "^9.4"
+        "phpunit/phpunit": "^9.4",
+        "phpseclib/mcrypt_compat": "^1.0"
     },
     "suggest": {
         "ext-sodium": "The Sodium library is native in PHP 7.2",
@@ -40,7 +43,10 @@
     "autoload": {
         "psr-4": {
             "Sidus\\EncryptionBundle\\": "src/"
-        }
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

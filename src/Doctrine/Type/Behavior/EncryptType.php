@@ -3,42 +3,30 @@
 namespace Sidus\EncryptionBundle\Doctrine\Type\Behavior;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface;
-use Sidus\EncryptionBundle\Manager\EncryptionManagerInterface;
+use Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface;
 
 trait EncryptType
 {
-    private EncryptionManagerInterface $encryptionManager;
-    private EncryptionEnablerInterface $encryptionEnabler;
+    private ValueEncrypterInterface $valueEncrypter;
     
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): string
     {
-        // Allow to do not decrypt the value for the current request
-        if (!$this->encryptionEnabler->isEncryptionEnabled()) {
-            return $value;
-        }
+        // Decode value previously encoded in base64 for database storage
+        $value = base64_decode($value);
         
-        return $this->encryptionManager->decryptString(base64_decode($value));
+        return $this->valueEncrypter->decrypt($value);
     }
     
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
-        // Allow to do not decrypt the value for the current request
-        if (!$this->encryptionEnabler->isEncryptionEnabled()) {
-            return $value;
-        }
-        $value = $this->encryptionManager->encryptString($value);
-        
+        $value = $this->valueEncrypter->encrypt($value);
+    
+        // Encoding to base64 to avoid issue when storing binary strings
         return base64_encode($value);
     }
     
-    public function setEncryptionManager(EncryptionManagerInterface $encryptionManager): void
+    public function setValueEncrypter(ValueEncrypterInterface $valueEncrypter): void
     {
-        $this->encryptionManager = $encryptionManager;
-    }
-    
-    public function setEncryptionEnabler(EncryptionEnablerInterface $encryptionEnabler): void
-    {
-        $this->encryptionEnabler = $encryptionEnabler;
+        $this->valueEncrypter = $valueEncrypter;
     }
 }
