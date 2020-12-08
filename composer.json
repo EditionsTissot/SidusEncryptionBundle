@@ -45,7 +45,8 @@
             "Sidus\\EncryptionBundle\\": "src/"
         },
         "exclude-from-classmap": [
-            "/Tests/"
+            "/Tests/",
+            "/tests/"
         ]
     },
     "autoload-dev": {
