@@ -43,7 +43,12 @@ class ValueEncrypterTest extends TestCase
     {
         $mcrypt = $this->registry->getEncryptionManager(Rijndael256MCryptEncryptionAdapter::getCode());
     
-        $mcrypt->encryptString($value);
+        $encryptedString = $mcrypt->encryptString($value);
+        $encryptedStringWithSodium = $this->registry->getEncryptionManager(XChaChaPolySodiumEncryptionAdapter::getCode());
+        $decryptedValue = $this->encrypter->decrypt($encryptedString);
+
+        $this->assertEquals($value, $decryptedValue);
+        $this->assertNotEquals($encryptedStringWithSodium, $decryptedValue);
     }
     
     protected function setUp(string $defaultAdapterCode = null): void
