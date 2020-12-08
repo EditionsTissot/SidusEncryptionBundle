@@ -11,6 +11,9 @@ trait EncryptType
     
     public function convertToPHPValue($value, AbstractPlatform $platform): string
     {
+        if ($value === null) {
+            $value = '';
+        }
         // Decode value previously encoded in base64 for database storage
         $value = base64_decode($value);
         
@@ -19,6 +22,9 @@ trait EncryptType
     
     public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
+        if ($value === null) {
+            $value = '';
+        }
         $value = $this->valueEncrypter->encrypt($value);
     
         // Encoding to base64 to avoid issue when storing binary strings
