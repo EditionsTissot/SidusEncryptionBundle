@@ -15,6 +15,8 @@ namespace Sidus\EncryptionBundle\Entity;
  * postLoad You need to return a array of the properties that needs to be encrypted and decrypted
  *
  * @author Vincent Chalnot <vincent@sidus.fr>
+ *
+ * @deprecated This class is not necessary anymore. Use the encrypt_string and encrypt_text Doctrine type instead.
  */
 interface CryptableInterface
 {
