@@ -1,7 +1,7 @@
 Sidus/EncryptionBundle
 ====================
 
-Easy entity and file encryption for Symfony2.
+Easy entity and file encryption for Symfony.
 
 We wanted to be able to store encrypted data in our Symfony2 applications and we realized that there were no simple way
 to do it.
@@ -19,6 +19,35 @@ each user can only decrypt it's own encrypted key at login time.
 The main weakness of this system is that the cipher key is stored temporarly in PHP's session, however,  the only way to
 overcome this problem would be to use a pretty complex asymmetric encryption system between the client and the server
 which could only be done properly using a rich client.
+
+Installation
+------------
+```shell
+composer require cleverage/encryption-bundle
+```
+
+
+Usage
+-----
+
+```php
+
+use Doctrine\ORM\Mapping as ORM;class MyEntity {
+    
+    /**
+     * @ORM\Column(type="encrypt_string") 
+     */
+    private string $myField;
+    
+    /**
+     * @ORM\Column(type="encrypt_text") 
+     */
+    private string $myFieldText;
+}
+
+```
+
+
 
 Helpers
 -------
