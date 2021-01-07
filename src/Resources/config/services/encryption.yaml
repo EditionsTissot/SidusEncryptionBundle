@@ -23,6 +23,7 @@ services:
         class: Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnabler
         public: false
 
+    Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface: '@Sidus\EncryptionBundle\Doctrine\ValueEncrypter'
     Sidus\EncryptionBundle\Doctrine\ValueEncrypter:
         class: Sidus\EncryptionBundle\Doctrine\ValueEncrypter
         public: false
@@ -30,5 +31,5 @@ services:
             - '@Sidus\EncryptionBundle\Registry\EncryptionManagerRegistryInterface'
             - '@logger'
             - '@Sidus\EncryptionBundle\Encryption\Enabler\EncryptionEnablerInterface'
-            
-    Sidus\EncryptionBundle\Doctrine\ValueEncrypterInterface: '@Sidus\EncryptionBundle\Doctrine\ValueEncrypter'
+            - '%sidus.encryption.throw_exceptions%'
+    

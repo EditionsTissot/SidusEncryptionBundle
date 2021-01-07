@@ -14,15 +14,18 @@ class ValueEncrypter implements ValueEncrypterInterface
     private EncryptionManagerRegistryInterface $registry;
     private LoggerInterface $logger;
     private EncryptionEnablerInterface $encryptionEnabler;
+    private bool $throwExceptions;
     
     public function __construct(
         EncryptionManagerRegistryInterface $registry,
         LoggerInterface $logger,
-        EncryptionEnablerInterface $encryptionEnabler
+        EncryptionEnablerInterface $encryptionEnabler,
+        bool $throwExceptions
     ) {
         $this->registry = $registry;
         $this->logger = $logger;
         $this->encryptionEnabler = $encryptionEnabler;
+        $this->throwExceptions = $throwExceptions;
     }
     
     public function encrypt(string $value): string
@@ -54,6 +57,10 @@ class ValueEncrypter implements ValueEncrypterInterface
                     return $encryptionManager->decryptString($value);
                 } catch (Exception $exception) {
                 }
+            }
+    
+            if ($this->throwExceptions) {
+                throw $exception;
             }
         }
     

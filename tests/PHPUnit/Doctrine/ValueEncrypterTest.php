@@ -73,6 +73,6 @@ class ValueEncrypterTest extends TestCase
         $this->registry = new EncryptionManagerRegistry(
             XChaChaPolySodiumEncryptionAdapter::getCode(), new \ArrayIterator($managers)
         );
-        $this->encrypter = new ValueEncrypter($this->registry, new Logger('encryption'), $enabler);
+        $this->encrypter = new ValueEncrypter($this->registry, new Logger('encryption'), $enabler, true);
     }
 }
