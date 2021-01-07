@@ -41,7 +41,6 @@ class EncryptionAdapterCompilerPass implements CompilerPassInterface
                 [
                     new Reference($adapterId),
                     new Reference(CipherKeyStorageInterface::class),
-                    $container->getParameter('sidus.encryption.throw_exceptions'),
                 ]
             );
             $managerDefinition->addTag('sidus.encryption.manager');

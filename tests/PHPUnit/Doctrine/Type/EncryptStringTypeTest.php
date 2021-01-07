@@ -61,7 +61,7 @@ class EncryptStringTypeTest extends TestCase
         $registry = new EncryptionManagerRegistry(
             XChaChaPolySodiumEncryptionAdapter::getCode(), new \ArrayIterator($managers)
         );
-        $encrypter = new ValueEncrypter($registry, new Logger('encryption'), $enabler);
+        $encrypter = new ValueEncrypter($registry, new Logger('encryption'), $enabler, true);
         $this->type = new EncryptStringType();
         $this->type->setValueEncrypter($encrypter);
     }

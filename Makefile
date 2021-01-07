@@ -7,3 +7,4 @@ install:
 
 tests:
 	bin/phpunit
+	bin/var-dump-check --symfony --exclude vendor src

@@ -10,7 +10,6 @@
 
 namespace Sidus\EncryptionBundle\Manager;
 
-use Exception;
 use Sidus\EncryptionBundle\Encryption\EncryptionAdapterInterface;
 use Sidus\EncryptionBundle\Entity\UserEncryptionProviderInterface;
 use Sidus\EncryptionBundle\Exception\EmptyCipherKeyException;
@@ -101,16 +100,7 @@ class EncryptionManager implements EncryptionManagerInterface
         if (null === $nonce) {
             $nonce = $this->encryptionAdapter->generateNonce();
         }
-    
-        try {
-            $encrypted = $this->encryptionAdapter->encrypt($string, $nonce, $this->cipherKeyStorage->getCipherKey());
-        } catch (Exception $exception) {
-            if ($this->throwExceptions) {
-                throw $exception;
-            }
-    
-            return '';
-        }
+        $encrypted = $this->encryptionAdapter->encrypt($string, $nonce, $this->cipherKeyStorage->getCipherKey());
 
         return $nonce.$encrypted;
     }
@@ -125,22 +115,14 @@ class EncryptionManager implements EncryptionManagerInterface
             return '';
         }
     
-        try {
-            if ($nonce === null) {
-                $nonce = $this->encryptionAdapter->parseNonce($encryptedString);
-            }
-            $decrypted = $this->encryptionAdapter->decrypt(
-                $encryptedString,
-                $nonce,
-                $this->cipherKeyStorage->getCipherKey()
-            );
-        } catch (Exception $exception) {
-            if ($this->throwExceptions) {
-                throw $exception;
-            }
-        
-            return '';
+        if ($nonce === null) {
+            $nonce = $this->encryptionAdapter->parseNonce($encryptedString);
         }
+        $decrypted = $this->encryptionAdapter->decrypt(
+            $encryptedString,
+            $nonce,
+            $this->cipherKeyStorage->getCipherKey()
+        );
     
         return rtrim($decrypted, "\0");
     }
