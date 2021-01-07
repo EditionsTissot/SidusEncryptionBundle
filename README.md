@@ -32,7 +32,9 @@ Usage
 
 ```php
 
-use Doctrine\ORM\Mapping as ORM;class MyEntity {
+use Doctrine\ORM\Mapping as ORM;
+
+class MyEntity {
     
     /**
      * @ORM\Column(type="encrypt_string") 
