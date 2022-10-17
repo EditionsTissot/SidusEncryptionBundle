@@ -2,6 +2,8 @@
 
 namespace Sidus\EncryptionBundle\Tests\PHPUnit\Doctrine\Type;
 
+use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\Platforms\MySQL80Platform;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use Monolog\Logger;
@@ -28,8 +30,8 @@ class EncryptStringTypeTest extends TestCase
      */
     public function testConvertToPHPValue(string $value): void
     {
-        $encryptedValue = $this->type->convertToDatabaseValue($value, new MySqlPlatform());
-        $decryptedValue = $this->type->convertToPHPValue($encryptedValue, new MySqlPlatform());
+        $encryptedValue = $this->type->convertToDatabaseValue($value, new MySQL80Platform());
+        $decryptedValue = $this->type->convertToPHPValue($encryptedValue, new MySQL80Platform());
         
         $this->assertEquals($value, $decryptedValue);
     }
