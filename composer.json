@@ -20,7 +20,7 @@
         }
     ],
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "ext-mbstring": "*",
         "symfony/framework-bundle": "^4.4|^5.1",
         "doctrine/doctrine-bundle": "*",
@@ -58,7 +58,8 @@
     "conflict": {
         "sidus/encryption-bundle": "*"
     },
-    "config": {
-        "bin-dir": "bin"
+    "scripts": {
+        "var-dump-check": "./vendor/bin/var-dump-check --symfony --exclude vendor src",
+        "unit-test": "./vendor/bin/phpunit"
     }
 }
