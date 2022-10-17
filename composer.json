@@ -58,7 +58,8 @@
     "conflict": {
         "sidus/encryption-bundle": "*"
     },
-    "config": {
-        "bin-dir": "bin"
+    "scripts": {
+        "var-dump-check": "./vendor/bin/var-dump-check --symfony --exclude vendor src",
+        "unit-test": "./vendor/bin/phpunit"
     }
 }
