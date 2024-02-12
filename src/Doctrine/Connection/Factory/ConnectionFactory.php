@@ -7,7 +7,6 @@ use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\AbstractMySQLDriver;
 use Doctrine\DBAL\DriverManager;
-use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
 use Sidus\EncryptionBundle\Doctrine\Type\EncryptTypeInterface;
@@ -103,18 +102,7 @@ class ConnectionFactory
      */
     private function getDatabasePlatform(Connection $connection) : AbstractPlatform
     {
-        try {
-            return $connection->getDatabasePlatform();
-        } catch (DriverException $driverException) {
-            throw new \Doctrine\DBAL\Exception(
-                'An exception occurred while establishing a connection to figure out your platform version.' . PHP_EOL .
-                "You can circumvent this by setting a 'server_version' configuration value" . PHP_EOL . PHP_EOL .
-                'For further information have a look at:' . PHP_EOL .
-                'https://github.com/doctrine/DoctrineBundle/issues/673',
-                0,
-                $driverException
-            );
-        }
+        return $connection->getDatabasePlatform();
     }
 
     /**
