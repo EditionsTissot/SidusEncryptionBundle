@@ -11,11 +11,13 @@ jobs:
       matrix:
         include:
           -   operating-system: 'ubuntu-latest'
-              php-version: '7.4'
-          -   operating-system: 'ubuntu-latest'
               php-version: '8.0'
           -   operating-system: 'ubuntu-latest'
               php-version: '8.1'
+          -   operating-system: 'ubuntu-latest'
+              php-version: '8.2'
+          -   operating-system: 'ubuntu-latest'
+              php-version: '8.3'
 
     name: PHP ${{ matrix.php-version }}
 
