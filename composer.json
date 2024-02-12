@@ -23,6 +23,8 @@
         "php": "^8.0",
         "ext-mbstring": "*",
         "symfony/framework-bundle": "^5.1|^6.0",
+        "doctrine/annotations": "*",
+        "doctrine/event-manager": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
         "symfony/security-core":"^5.1|^6.0",
