@@ -20,18 +20,20 @@
         }
     ],
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^8.0",
         "ext-mbstring": "*",
-        "symfony/framework-bundle": "^4.4|^5.1",
+        "symfony/framework-bundle": "^5.1|^6.0",
+        "doctrine/annotations": "*",
+        "doctrine/event-manager": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
-        "symfony/security-core":"^4.4|^5.1",
+        "symfony/security-core":"^5.1|^6.0",
         "symfony/monolog-bundle": "^3.6",
         "symfony/string": "^5.2",
         "php-parallel-lint/php-var-dump-check": "^0.5.0"
     },
     "require-dev": {
-        "symfony/stopwatch": "^4.4|^5.1",
+        "symfony/stopwatch": "^5.1||^6.0",
         "phpunit/phpunit": "^9.4",
         "phpseclib/mcrypt_compat": "^1.0"
     },
