@@ -12,7 +12,8 @@ namespace Sidus\EncryptionBundle\Session;
 
 use Sidus\EncryptionBundle\Exception\EmptyCipherKeyException;
 use Sidus\EncryptionBundle\Exception\EmptyOwnershipIdException;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Handles cipher key storage across multiple request
@@ -24,16 +25,18 @@ class CipherKeyStorage implements CipherKeyStorageInterface
     protected const SESSION_CIPHER_KEY = 'sidus.encryption.cipherkey';
     protected const SESSION_OWNERSHIP_KEY = 'sidus.encryption.ownership';
 
-    protected Session $session;
+    protected RequestStack $request;
     protected string $cipherKey;
     protected $encryptionOwnershipId;
 
-    /**
-     * @param Session $session
-     */
-    public function __construct(Session $session)
+    public function __construct(RequestStack $request)
     {
-        $this->session = $session;
+        $this->request = $request;
+    }
+    
+    private function getSession(): SessionInterface
+    {
+        return $this->request->getSession();
     }
 
     /**
@@ -49,7 +52,7 @@ class CipherKeyStorage implements CipherKeyStorageInterface
             throw new EmptyCipherKeyException('Trying to set an empty cipher key');
         }
         $this->cipherKey = $cipherKey;
-        $this->session->set(self::SESSION_CIPHER_KEY, bin2hex($cipherKey));
+        $this->getSession()->set(self::SESSION_CIPHER_KEY, bin2hex($cipherKey));
     }
 
     /**
@@ -62,7 +65,7 @@ class CipherKeyStorage implements CipherKeyStorageInterface
     public function getCipherKey(): string
     {
         if (!isset($this->cipherKey) || !$this->cipherKey) {
-            $this->cipherKey = hex2bin($this->session->get(self::SESSION_CIPHER_KEY));
+            $this->cipherKey = hex2bin($this->getSession()->get(self::SESSION_CIPHER_KEY));
         }
         if (!trim($this->cipherKey)) {
             throw new EmptyCipherKeyException('Empty cipher key');
@@ -84,7 +87,7 @@ class CipherKeyStorage implements CipherKeyStorageInterface
             throw new EmptyOwnershipIdException('Trying to set an empty ownership identifier');
         }
         $this->encryptionOwnershipId = $encryptionOwnershipId;
-        $this->session->set(self::SESSION_OWNERSHIP_KEY, bin2hex($encryptionOwnershipId));
+        $this->getSession()->set(self::SESSION_OWNERSHIP_KEY, bin2hex($encryptionOwnershipId));
     }
 
     /**
@@ -97,7 +100,7 @@ class CipherKeyStorage implements CipherKeyStorageInterface
     public function getEncryptionOwnershipId(): string
     {
         if (!$this->encryptionOwnershipId) {
-            $this->encryptionOwnershipId = hex2bin($this->session->get(self::SESSION_OWNERSHIP_KEY));
+            $this->encryptionOwnershipId = hex2bin($this->getSession()->get(self::SESSION_OWNERSHIP_KEY));
         }
         if (!trim($this->encryptionOwnershipId)) {
             throw new EmptyOwnershipIdException('Empty ownership identifier');
