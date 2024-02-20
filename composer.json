@@ -22,18 +22,17 @@
     "require": {
         "php": "^8.0",
         "ext-mbstring": "*",
-        "symfony/framework-bundle": "^5.1|^6.0",
+        "symfony/framework-bundle": "^6.4",
         "doctrine/annotations": "*",
         "doctrine/event-manager": "*",
         "doctrine/doctrine-bundle": "*",
         "doctrine/orm": "*",
-        "symfony/security-core":"^5.1|^6.0",
+        "symfony/security-core":"^6.4",
         "symfony/monolog-bundle": "^3.6",
-        "symfony/string": "^5.2",
-        "php-parallel-lint/php-var-dump-check": "^0.5.0"
+        "symfony/string": "^6.4"
     },
     "require-dev": {
-        "symfony/stopwatch": "^5.1||^6.0",
+        "symfony/stopwatch": "^6.4",
         "phpunit/phpunit": "^9.4",
         "phpseclib/mcrypt_compat": "^1.0"
     },

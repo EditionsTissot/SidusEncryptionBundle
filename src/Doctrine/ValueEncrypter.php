@@ -47,7 +47,7 @@ class ValueEncrypter implements ValueEncrypterInterface
             return $value;
         }
         $manager = $this->extractManagerFromEncryptedValue($value);
-        $value = (new ByteString($value))->replace($manager->getEncryptionAdapter()::getCode().'.', '')->toByteString();
+        $value = (new ByteString($value))->replace($manager->getEncryptionAdapter()::getCode().'.', '')->toByteString()->toString();
     
         try {
             return $manager->decryptString($value);
