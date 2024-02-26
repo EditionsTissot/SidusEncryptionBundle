@@ -64,7 +64,7 @@ class DecryptFileResponse extends BinaryFileResponse
      *
      * @return DecryptFileResponse
      */
-    public function prepare(Request $request): DecryptFileResponse
+    public function prepare(Request $request): static
     {
         parent::prepare($request);
         $this->headers->set('Content-Length', $this->fileSize);
@@ -77,14 +77,15 @@ class DecryptFileResponse extends BinaryFileResponse
      *
      * @throws \Sidus\EncryptionBundle\Exception\EmptyCipherKeyException
      */
-    public function sendContent()
+    public function sendContent(): static
     {
         if (!$this->isSuccessful()) {
             parent::sendContent();
 
-            return;
+            return $this;
         }
 
         $this->encryptionManager->decryptFile($this->file->getPathname(), 'php://output', $this->fileSize);
+        return $this;
     }
 }
